@@ -18,29 +18,43 @@ export async function createSnippet(
   formState: { message: string },
   formData: FormData,
 ) {
-  const title = formData.get("title");
-  const code = formData.get("code");
-
-  if (typeof title !== "string" || title.length < 3) {
-    return {
-      message: "Title must be longer",
-    };
-  }
-
-  if (typeof code !== "string" || code.length < 10) {
-    return {
-      message: "Code must be longer",
-    };
-  }
-
+  // Put try at first to include all errors that possibly can happen
   try {
+    const title = formData.get("title");
+    const code = formData.get("code");
+    // Some form validation
+    if (typeof title !== "string" || title.length < 3) {
+      return {
+        message: "Title must be longer",
+      };
+    }
+
+    if (typeof code !== "string" || code.length < 10) {
+      return {
+        message: "Code must be longer",
+      };
+    }
+
     const snippet = await db.query(
       "INSERT INTO snippet (title, code) VALUES ($1, $2) RETURNING *",
       [title, code],
     );
     console.log(snippet.rows[0]);
-  } catch (error: any) {
-    console.log(error.message);
+  } catch (error: unknown) {
+    // Becuse error type is unknown , its not sure that has a message property , so we have to put a type guard
+    if (error instanceof Error) {
+      console.log(error.message);
+      // Just return an object with message property from server action to show inside client component
+      return {
+        message: error.message,
+      };
+    } else {
+      // Some unknown error happened without message property
+      return {
+        message: "Something went wrong...",
+      };
+    }
   }
+  // redirect throws an error so should always be at the end
   redirect("/");
 }
