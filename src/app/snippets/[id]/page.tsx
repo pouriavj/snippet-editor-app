@@ -55,3 +55,20 @@ export default async function SnippetShowPage(props: SnippetShowPageProps) {
     return notFound();
   }
 }
+
+// Caching dynamic routes(SSG) , caching each [id] page and prerender each of them and cache all of them with this special function :
+export async function generateStaticParams() {
+  // First we fetch all snippets
+  const result = await db.query("SELECT * FROM snippet");
+  const snippets = result.rows;
+
+  // Then we return an obect with id of each , for each record
+  return snippets.map((snippet) => {
+    return {
+      // id is number in db , change it to string with toString()
+      id: snippet.id.toString(),
+    };
+  });
+}
+// Now all pages load instantly without loading spinner becuse they are cached
+// But we now need cache control revalidatePath

@@ -1,16 +1,20 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 
 export async function editSnippet(id: number, code: string) {
   await db.query("UPDATE snippet SET code = $1 WHERE id = $2", [code, id]);
-
+  // Rebuilding snippet page becuse we use SSG caching on it
+  revalidatePath(`/snippets/${id}`);
   redirect(`/snippets/${id}`);
 }
 
 export async function deleteSnippet(id: number) {
   await db.query("DELETE FROM snippet WHERE id = $1", [id]);
+  // Rerendering home page (disable cahing once) after delete, on home page
+  revalidatePath("/");
   redirect("/");
 }
 
@@ -55,6 +59,8 @@ export async function createSnippet(
       };
     }
   }
+  // Rebuild the home page (ignore cache)
+  revalidatePath("/");
   // redirect throws an error so should always be at the end
   redirect("/");
 }
