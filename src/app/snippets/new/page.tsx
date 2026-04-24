@@ -1,23 +1,30 @@
 "use client";
 
-import { useActionState, startTransition } from "react";
-
+import { useActionState, startTransition, useState } from "react";
+import Editor from "@monaco-editor/react";
 import * as actions from "@/actions";
 
 export default function SnippetCreatePage() {
   const [formState, action] = useActionState(actions.createSnippet, {
     message: "",
   });
+  const [code, setCode] = useState("");
   // The most recent type of submit event looked from (e) => handleSubmit(e) inside form onSubmit and hovering on "e"
   function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     // To prevent default reseting of the form
     const formData = new FormData(event.currentTarget);
+
+    //***** Manually setting the second param of formData to code = code *****//
+    formData.set("code", code);
     startTransition(() => {
       action(formData);
     });
     // action is used here to prevent default and passed inside onSubmit(no more form action)
   }
+  const handleEditorChange = (value: string = "") => {
+    setCode(value);
+  };
   return (
     <form onSubmit={handleSubmit}>
       <h3 className="font-bold m-3">Create a Snippet</h3>
@@ -33,7 +40,7 @@ export default function SnippetCreatePage() {
           />
         </div>
 
-        <div className="flex gap-4">
+        {/* <div className="flex gap-4">
           <label className="w-12" htmlFor="code">
             Code
           </label>
@@ -42,7 +49,16 @@ export default function SnippetCreatePage() {
             className="border rounded p-2 w-full"
             id="code"
           />
-        </div>
+        </div> */}
+        <Editor
+          height="40vh"
+          theme="vs-dark"
+          language="javascript"
+          defaultValue=""
+          options={{ minimap: { enabled: false } }}
+          onChange={handleEditorChange}
+          value={code}
+        />
 
         {formState.message ? (
           <div className="my-2 p-2 bg-red-200 border rounded border-red-400">

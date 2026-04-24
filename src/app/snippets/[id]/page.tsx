@@ -11,9 +11,9 @@ interface SnippetShowPageProps {
 
 export default async function SnippetShowPage(props: SnippetShowPageProps) {
   // Artificial delay to replicate loading ...
-  await new Promise((r) => {
-    setTimeout(r, 1000);
-  });
+  // await new Promise((r) => {
+  //   setTimeout(r, 1000);
+  // });
   // ....
   const { id } = await props.params;
   // Even in server component , to call an external server action file , must use .bind method
@@ -45,7 +45,7 @@ export default async function SnippetShowPage(props: SnippetShowPageProps) {
             </form>
           </div>
         </div>
-        <pre className="p-3 border rounded bg-gray-200 border-gray-200">
+        <pre className="p-3 border rounded bg-gray-300 p-6 border-gray-200">
           <code>{snippet.code}</code>
         </pre>
       </div>
@@ -62,7 +62,7 @@ export async function generateStaticParams() {
   const result = await db.query("SELECT * FROM snippet");
   const snippets = result.rows;
 
-  // Then we return an obect with id of each , for each record
+  // Then we return an object with id of each , for each record
   return snippets.map((snippet) => {
     return {
       // id is number in db , change it to string with toString()
