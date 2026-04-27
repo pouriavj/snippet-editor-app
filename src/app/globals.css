@@ -6,7 +6,6 @@ body {
 .main-container {
   display: flex;
   flex-direction: row;
-  
 }
 
 .side-bar {
@@ -71,13 +70,47 @@ body {
   cursor: pointer;
 }
 
-.editor{
+.editor {
   width: 100%;
 }
 
-.tool-bar{
+.tool-bar {
   display: flex;
-  height: 36px;
-  background-color: #191919;
+  height: 32px;
+  background-color: #161616;
   color: #e9edf2;
+}
+.tool-bar-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #cecece;
+  font-family: "Google Sans";
+  font-size: 12px;
+  cursor: pointer;
+  padding: 6px 10px 6px 16px;
+  border: 1px solid #292929;
+  border-left: none;
+}
+
+.close {
+  padding: 6;
+  border-radius: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.close:hover {
+  background-color: #494949;
+}
+.closeHover {
+  padding: 6;
+  border-radius: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.closeHover:hover {
+  background-color: #333333;
 }

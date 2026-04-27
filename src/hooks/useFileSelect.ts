@@ -12,19 +12,28 @@ export default function useFileSelect() {
   const [fileArray, setFileArray] = useState<{ id: number; name: string }[]>(
     [],
   );
+  // Set ui file
   const MAX_FILES = 10;
   function setFile(id: number, name: string) {
     setSelectedFile(id);
 
-    // .some loops into onject and if codition matched it return true and stop , 
+    // .some loops into onject and if codition matched it return true and stop ,
     // .includes works for simple one values , .some for comples object values
-    const isDuplicate = fileArray.some((file) => file.id === id); 
-    if (!isDuplicate && fileArray.length < MAX_FILES ) {
+    const isDuplicate = fileArray.some((file) => file.id === id);
+    if (!isDuplicate && fileArray.length < MAX_FILES) {
       setFileArray((prevValue) => {
         return [...prevValue, { id, name }];
       });
     }
   }
 
-  return { selectedFile, setFile, fileArray };
+  function deleteFile(id: number) {
+    setFileArray(
+      fileArray.filter((file) => {
+        return file.id !== id;
+      }),
+    );
+  }
+
+  return { selectedFile, setFile, fileArray, deleteFile };
 }

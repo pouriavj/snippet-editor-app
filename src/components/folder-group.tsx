@@ -67,7 +67,7 @@ export default function FolderGroup({
           return (
             <div
               style={{
-                backgroundColor: file.id === selectedFile ? "#605F5E" : "unset",
+                backgroundColor: file.id === selectedFile ? "#646362" : "unset",
 
                 marginLeft: `${count * -16}px`,
               }}

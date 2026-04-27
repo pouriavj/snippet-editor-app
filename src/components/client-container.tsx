@@ -24,7 +24,7 @@ export default function ClientContainer({
   folders,
   files,
 }: CilentContainerProps) {
-  const { selectedFile, setFile, fileArray } = useFileSelect();
+  const { selectedFile, setFile, fileArray, deleteFile } = useFileSelect();
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
   });
@@ -47,6 +47,7 @@ export default function ClientContainer({
         }}
         fileArray={fileArray}
         setFile={setFile}
+        deleteFile={deleteFile}
       />
     </div>
   );

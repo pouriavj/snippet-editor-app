@@ -1,15 +1,19 @@
-export default function FileIcon() {
+interface FileIconProps {
+  size?: number;
+  color?: string;
+}
+export default function FileIcon({ size = 18, color = "#e9edf2" }: FileIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="22"
+      width={size}
+      height={size + 4}
       viewBox="0 0 22.417 29.889"
     >
       <path
         id="file-code"
         d="M0,3.736A3.74,3.74,0,0,1,3.736,0h8.727a3.737,3.737,0,0,1,2.644,1.092l6.217,6.223a3.737,3.737,0,0,1,1.092,2.644V26.153a3.74,3.74,0,0,1-3.736,3.736H3.736A3.74,3.74,0,0,1,0,26.153Zm12.142-.321V8.873a1.4,1.4,0,0,0,1.4,1.4H19ZM9,17.256a1.4,1.4,0,0,0-2.125-1.821L4.075,18.7a1.4,1.4,0,0,0,0,1.821l2.8,3.269A1.4,1.4,0,1,0,9,21.973l-2.02-2.358L9,17.256Zm6.538-1.821a1.4,1.4,0,1,0-2.125,1.821l2.02,2.358-2.02,2.358a1.4,1.4,0,0,0,2.125,1.821l2.8-3.269a1.4,1.4,0,0,0,0-1.821l-2.8-3.269Z"
-        fill="#e9edf2"
+        fill={color}
       />
     </svg>
   );
