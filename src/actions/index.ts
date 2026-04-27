@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 
-export async function editSnippet(id: number, code: string) {
+export async function editSnippet(id: number, code: string | null | undefined) {
   await db.query("UPDATE snippet SET code = $1 WHERE id = $2", [code, id]);
   // Rebuilding snippet page becuse we use SSG caching on it
   revalidatePath(`/snippets/${id}`);

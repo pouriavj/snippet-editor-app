@@ -1,8 +1,5 @@
-import Link from "next/link";
 import { db } from "@/lib/db";
-import SideBar from "@/components/side-bar";
-import { Editor } from "@monaco-editor/react";
-import MyEditor from "@/components/my-editor";
+import ClientContainer from "@/components/client-container";
 
 // Making whole page dynamic by force(disable caching):
 // export const dynamic = "force-dynamic";
@@ -24,11 +21,6 @@ export default async function Home() {
   const folders = folderData.rows;
   const files = fileData.rows;
   console.log(files);
-  
 
-  return <div className="main-container">
-    <SideBar folders={folders} files={files} />
-    <MyEditor snippet={{id:1, title:"sdsdsdsdsdsdsdsd", code: "sdsdsdsdsdsdsdsdsdsd"}} />
-
-  </div>;
+  return <ClientContainer folders={folders} files={files} />;
 }
