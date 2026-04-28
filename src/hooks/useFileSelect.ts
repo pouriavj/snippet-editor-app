@@ -12,6 +12,7 @@ export default function useFileSelect() {
   const [fileArray, setFileArray] = useState<{ id: number; name: string }[]>(
     [],
   );
+  const [selectedFolder, setSelectedFolder] = useState<number>(0);
   // Set ui file
   const MAX_FILES = 10;
   function setFile(id: number, name: string) {
@@ -35,5 +36,9 @@ export default function useFileSelect() {
     );
   }
 
-  return { selectedFile, setFile, fileArray, deleteFile };
+  function setFolder(id: number) {
+    setSelectedFolder(id);
+  }
+
+  return { selectedFile, setFile, fileArray, deleteFile , setFolder, selectedFolder};
 }

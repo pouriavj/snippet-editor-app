@@ -26,6 +26,8 @@ interface FolderGroupProps {
   selectedFile: number;
   setFile: (id: number, name: string) => void;
   count?: number;
+  setFolder: (id: number) => void;
+  selectedFolder: number;
 }
 
 export default function FolderGroup({
@@ -35,13 +37,16 @@ export default function FolderGroup({
   selectedFile,
   setFile,
   count = 1,
+  setFolder,
+  selectedFolder,
 }: FolderGroupProps) {
   const [direction, setDirection] = useState("right");
 
-  const toggleDirection = () => {
+  const toggleDirection = (id: number) => {
     setDirection((prevDirection) =>
       prevDirection === "right" ? "bottom" : "right",
     );
+    setFolder(id);
   };
 
   const renderChildren = (id: number) => {
@@ -59,6 +64,8 @@ export default function FolderGroup({
                 selectedFile={selectedFile}
                 setFile={setFile}
                 count={count}
+                setFolder={setFolder}
+                selectedFolder={selectedFolder}
               />
             </div>
           );
@@ -71,7 +78,14 @@ export default function FolderGroup({
 
                 marginLeft: `${count * -16}px`,
               }}
-              onClick={() => setFile(file.id, file.name)}
+              onClick={() => {
+                setFile(file.id, file.name);
+                if (file.folder_id) {
+                  setFolder(file.folder_id);
+                } else {
+                  setFolder(0);
+                }
+              }}
               key={file.id}
             >
               <div
@@ -89,7 +103,13 @@ export default function FolderGroup({
 
   return (
     <div>
-      <div className="folder-title" onClick={toggleDirection}>
+      <div
+        className="folder-title"
+        onClick={() => toggleDirection(id)}
+        style={{
+          color: id === selectedFolder ? "#00bcd4" : "",
+        }}
+      >
         <ChevronIcon direction={direction} />
         {direction === "bottom" ? <OpenFolderIcon /> : <ClosedFolderIcon />}
 

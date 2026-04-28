@@ -24,13 +24,28 @@ export default function ClientContainer({
   folders,
   files,
 }: CilentContainerProps) {
-  const { selectedFile, setFile, fileArray, deleteFile } = useFileSelect();
+  const {
+    selectedFile,
+    setFile,
+    fileArray,
+    deleteFile,
+    setFolder,
+    selectedFolder,
+  } = useFileSelect();
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
   });
- 
-  
-  
+  const fetchParentFolder = (id: number) => {
+    const foundFile = files.find((file) => {
+      return file.id === id;
+    });
+    if (foundFile?.folder_id) {
+      return foundFile.folder_id;
+    } else {
+      return 0
+    }
+  };
+
   return (
     <div className="main-container">
       <SideBar
@@ -38,6 +53,8 @@ export default function ClientContainer({
         files={files}
         selectedFile={selectedFile}
         setFile={setFile}
+        setFolder={setFolder}
+        selectedFolder={selectedFolder}
       />
       <MyEditor
         snippet={{
@@ -48,6 +65,8 @@ export default function ClientContainer({
         fileArray={fileArray}
         setFile={setFile}
         deleteFile={deleteFile}
+        setFolder={setFolder}
+        fetchParentFolder={fetchParentFolder}
       />
     </div>
   );
