@@ -18,7 +18,7 @@ export default function useFileSelect() {
   function setFile(id: number, name: string) {
     setSelectedFile(id);
 
-    // .some loops into onject and if codition matched it return true and stop ,
+    // .some loops into object and if codition matched it return true and stop ,
     // .includes works for simple one values , .some for comples object values
     const isDuplicate = fileArray.some((file) => file.id === id);
     if (!isDuplicate && fileArray.length < MAX_FILES) {
