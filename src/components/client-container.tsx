@@ -92,7 +92,6 @@ export default function ClientContainer({
         selectedFolder={selectedFolder}
         addFolderInput={addFolderInput}
         isAddingFolder={isAddingFolder}
-        cancelFolderInput={cancelFolderInput}
       />
       <MyEditor
         snippet={{

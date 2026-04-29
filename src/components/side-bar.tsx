@@ -29,7 +29,7 @@ interface SideBarProps {
   selectedFolder: number;
   addFolderInput: () => void;
   isAddingFolder: boolean; // To know if the input UI is visible
-  cancelFolderInput: () => void; // Function to hide the input UI
+  
 }
 
 export default function SideBar({
@@ -41,7 +41,7 @@ export default function SideBar({
   selectedFolder,
   addFolderInput,
   isAddingFolder,
-  cancelFolderInput,
+  
 }: SideBarProps) {
   const folderGroupChildren = (folderId: number | null) => {
     const childFolders = folders.filter((folder) => {
@@ -123,11 +123,9 @@ export default function SideBar({
       </div>
       <div
         style={{ height: "100%" }}
-        // Add onMouseDown instead of onClick, and ensure it only calls cancel if needed
+        
         onMouseDown={(e) => {
-          if (isAddingFolder) {
-            cancelFolderInput();
-          }
+          
 
           handleParentClick(e);
         }}
