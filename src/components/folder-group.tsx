@@ -4,6 +4,7 @@ import ChevronIcon from "./icons/chevron-icon";
 import ClosedFolderIcon from "./icons/closed-folder-icon";
 import OpenFolderIcon from "./icons/open-folder-icon";
 import FileIcon from "./icons/file-icon";
+import NewFolderInput from "./new-folder-input";
 
 interface FolderGroupProps {
   id: number;
@@ -28,6 +29,13 @@ interface FolderGroupProps {
   count?: number;
   setFolder: (id: number) => void;
   selectedFolder: number;
+  submitAction: (formData: FormData) => void;
+  cancelFolderInput: () => void;
+  isPending: boolean;
+  formState: {
+    message: string | null;
+  };
+  rootUserId: number | null;
 }
 // This is the nested folder group structure that returns itself inside it (tree structure)
 export default function FolderGroup({
@@ -39,6 +47,11 @@ export default function FolderGroup({
   count = 1,
   setFolder,
   selectedFolder,
+  submitAction,
+  cancelFolderInput,
+  isPending,
+  formState,
+  rootUserId,
 }: FolderGroupProps) {
   const [direction, setDirection] = useState("right");
 
@@ -59,17 +72,15 @@ export default function FolderGroup({
           // this mock folder input only appears as child folder when adding new folder
           if (folder.user_id === -1) {
             return (
-              <div
-                key={folder.id}
-                className="folder-title"
-                style={{ marginLeft: 30, marginTop: 16 }}
-                // Stop propagation so clicks inside this div don't trigger the global handler in ClientContainer
-                onClick={(e) => e.stopPropagation()}
-              >
-                <ClosedFolderIcon />
-                <input type="text" autoFocus />
-                <button>Save</button>
-              </div>
+              <NewFolderInput
+                key={-1}
+                submitAction={submitAction}
+                cancelFolderInput={cancelFolderInput}
+                isPending={isPending}
+                formState={formState}
+                rootUserId={rootUserId}
+                parentFolderId={folder.folder_id}
+              />
             );
           }
 
@@ -84,6 +95,11 @@ export default function FolderGroup({
                 count={count}
                 setFolder={setFolder}
                 selectedFolder={selectedFolder}
+                submitAction={submitAction}
+                cancelFolderInput={cancelFolderInput}
+                isPending={isPending}
+                formState={formState}
+                rootUserId={rootUserId}
               />
             </div>
           );

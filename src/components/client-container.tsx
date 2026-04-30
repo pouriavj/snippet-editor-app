@@ -43,9 +43,6 @@ export default function ClientContainer({
     { message: "" },
   );
 
-
-
-
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
   });
