@@ -36,7 +36,7 @@ export default function NewFileInput({
       className="folder-title"
       style={{
         marginLeft: parentFolderId ? 44 : 28,
-        marginTop: parentFolderId ? 20 : "",
+        marginTop: parentFolderId ? 20 : 8,
         alignItems: "flex-start",
       }}
       // Stop propagation so clicks inside this div don't trigger the global handler in ClientContainer

@@ -223,3 +223,67 @@ input:focus {
   color: #666;
   cursor: not-allowed;
 }
+
+.ellipsis-container {
+  margin-left: auto;
+  margin-right: 16px;
+}
+.ellipsis {
+  padding: 8px;
+  border-radius: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ellipsis:hover {
+  background-color: #757575dc;
+}
+.pop-up {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  right: 16;
+  background-color: rgb(37, 37, 37);
+
+  border-radius: 8px;
+  gap: 16px;
+  font-family: "Google Sans";
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.322);
+}
+
+.edit-buttons-container {
+  position: relative;
+  width: 100%;
+}
+
+.rename-button {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.delete-button {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: rgb(253, 134, 134);
+}
+
+.rename-button:hover {
+  background-color: #666;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+.delete-button:hover {
+  background-color: #666;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}

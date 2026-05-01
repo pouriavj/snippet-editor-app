@@ -10,6 +10,8 @@ import NewFolderInput from "./new-folder-input";
 import type { ItemToAdd } from "./client-container";
 import FileIcon from "./icons/file-icon";
 import NewFileInput from "./new-file-input";
+import EllipsisIcon from "./icons/ellipsis-icon";
+import EllipsisHandler from "./ellipsis-handler";
 
 interface SideBarProps {
   folders: {
@@ -151,6 +153,9 @@ export default function SideBar({
           key={file.id}
         >
           <FileIcon /> {file.name}
+          {file.id === selectedFile && (
+            <EllipsisHandler id={file.id} type="file" />
+          )}
         </div>
       );
     }
