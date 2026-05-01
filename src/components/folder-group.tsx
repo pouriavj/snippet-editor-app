@@ -6,6 +6,7 @@ import OpenFolderIcon from "./icons/open-folder-icon";
 import FileIcon from "./icons/file-icon";
 import NewFolderInput from "./new-folder-input";
 import type { ItemToAdd } from "./client-container";
+import type { ItemAction } from "./side-bar";
 
 interface FolderGroupProps {
   id: number;
@@ -30,10 +31,10 @@ interface FolderGroupProps {
   count?: number;
   setFolder: (id: number) => void;
   selectedFolder: number;
-  submitAction: (formData: FormData) => void;
-  isPending: boolean;
-  formState: {
-    message: string | null;
+  formActions: {
+    create: ItemAction;
+    edit: ItemAction;
+    delete: ItemAction;
   };
   rootUserId: number | null;
   cancelInput: (inputType: ItemToAdd) => void;
@@ -48,10 +49,8 @@ export default function FolderGroup({
   count = 1,
   setFolder,
   selectedFolder,
-  submitAction,
+  formActions,
   cancelInput,
-  isPending,
-  formState,
   rootUserId,
 }: FolderGroupProps) {
   const [direction, setDirection] = useState("right");
@@ -75,10 +74,10 @@ export default function FolderGroup({
             return (
               <NewFolderInput
                 key={-1}
-                submitAction={submitAction}
+                submitAction={formActions.create.folder.submitAction}
                 cancelInput={cancelInput}
-                isPending={isPending}
-                formState={formState}
+                isPending={formActions.create.folder.isPending}
+                formState={formActions.create.folder.formState}
                 rootUserId={rootUserId}
                 parentFolderId={folder.folder_id}
               />
@@ -96,10 +95,10 @@ export default function FolderGroup({
                 count={count}
                 setFolder={setFolder}
                 selectedFolder={selectedFolder}
-                submitAction={submitAction}
+                formActions={formActions}
                 cancelInput={cancelInput}
-                isPending={isPending}
-                formState={formState}
+                
+                
                 rootUserId={rootUserId}
               />
             </div>

@@ -48,14 +48,34 @@ body {
   padding-right: 16px;
 }
 
+.top-level-files {
+  display: flex;
+  gap: 8px;
+  padding-left: 44px;
+  align-items: center;
+  color: #e9edf2;
+  font-family: "Google Sans";
+  font-size: 16px;
+  
+  cursor: pointer;
+}
+
+.files-explorer{
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 9px;
+}
+
 .child-folders {
   margin-left: 16px;
   margin-top: 18px;
 }
 
 .child-files {
-  margin-left: 54px;
+  margin-left: 58px;
   margin-top: 9px;
+  margin-bottom: -9px;
   padding-top: 9px;
   padding-bottom: 9px;
 }
@@ -167,14 +187,13 @@ input {
   color: #fd5858;
   font-family: "Google Sans";
   font-size: 14;
-  
 }
 input:focus {
   outline: none; /* Removes the default browser outline */
 }
 .save-button {
   background-color: #04c2b2;
-  color: #181715; 
+  color: #181715;
   font-family: "Google Sans";
   font-size: 14px;
   font-weight: 600;
@@ -182,7 +201,9 @@ input:focus {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -190,7 +211,7 @@ input:focus {
 }
 
 .save-button:hover {
-  background-color: #0395a8; 
+  background-color: #0395a8;
 }
 
 .save-button:active {

@@ -65,12 +65,12 @@ export async function createSnippet(
   redirect("/");
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////////////
 
+// Create Folder
+
 export async function createFolder(
-  prevState: { message: string }, 
+  prevState: { message: string },
   formData: FormData,
 ) {
   try {
@@ -86,8 +86,8 @@ export async function createFolder(
     // Parse IDs (null if empty/undefined)
     const parsedFolderId = folderId ? parseInt(folderId) : null;
     const parsedUserId = userId ? parseInt(userId) : null;
-    
-    // Insert query 
+
+    // Insert query
     const newFolder = await db.query(
       "INSERT INTO folders (name, folder_id, user_id) VALUES ($1, $2, $3) RETURNING *",
       [name, parsedFolderId, parsedUserId],
@@ -98,11 +98,56 @@ export async function createFolder(
     revalidatePath("/"); // Revalidate after success
 
     // return a state object for useActionState
-    return { message: "success" }; 
-
+    return { message: "success" };
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Something went wrong...";
+    const message =
+      error instanceof Error ? error.message : "Something went wrong...";
     console.error("Create folder error:", message);
     return { message: `error: ${message}` };
   }
+}
+
+// Create File
+
+export async function createFile(
+  prevState: { message: string },
+  formData: FormData,
+) {
+  return { message: "" };
+}
+
+// Edit Folder
+
+export async function editFolder(
+  prevState: { message: string },
+  formData: FormData,
+) {
+  return { message: "" };
+}
+
+// Edit File
+
+export async function editFile(
+  prevState: { message: string },
+  formData: FormData,
+) {
+  return { message: "" };
+}
+
+// Delete Folder
+
+export async function deleteFolder(
+  prevState: { message: string },
+  formData: FormData,
+) {
+  return { message: "" };
+}
+
+// Delete File
+
+export async function deleteFile(
+  prevState: { message: string },
+  formData: FormData,
+) {
+  return { message: "" };
 }

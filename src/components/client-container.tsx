@@ -5,6 +5,7 @@ import MyEditor from "./my-editor";
 import SideBar from "./side-bar";
 import { useActionState, useState } from "react";
 import * as actions from "@/actions";
+import useFormAction from "@/hooks/useFormAction";
 
 interface CilentContainerProps {
   folders: {
@@ -28,6 +29,8 @@ export default function ClientContainer({
   folders,
   files,
 }: CilentContainerProps) {
+
+  // useFileSelect custom hook init
   const {
     selectedFile,
     setFile,
@@ -36,15 +39,15 @@ export default function ClientContainer({
     setFolder,
     selectedFolder,
   } = useFileSelect();
+  
+  // useFormAction custom hook init
+  const formActions = useFormAction();
+
   const [isAddingItem, setIsAddingItem] = useState<ItemToAdd>("none"); // Manage visibility of folder/file input
   const [newFolderArray, setNewFolderArray] = useState(folders); // Makes new folder array to contains a mock child folder input for better Ui vs-code style
   const [newFileArray, setNewFileArray] = useState(files); // Makes new file array to contains a mock child file input for better Ui vs-code style
 
-  // useActionState initialize
-  const [formState, submitAction, isPending] = useActionState(
-    actions.createFolder,
-    { message: "" },
-  );
+  
 
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
@@ -106,7 +109,7 @@ export default function ClientContainer({
   };
 
   const handleGlobalClick = () => {
-    // If the folder input is active AND the click target is NOT inside the input row, cancel.
+    // If the folder/file input is active AND the click target is NOT inside the input row, cancel.
     // The SideBar's stopPropagation will prevent this if the click IS inside the input.
     if (isAddingItem === "folder") {
       cancelInput("folder");
@@ -128,9 +131,7 @@ export default function ClientContainer({
         selectedFolder={selectedFolder}
         addMockInput={addMockInput}
         isAddingItem={isAddingItem}
-        submitAction={submitAction}
-        isPending={isPending}
-        formState={formState}
+        formActions={formActions}
         cancelInput={cancelInput}
       />
       <MyEditor

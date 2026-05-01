@@ -8,6 +8,7 @@ import SearchIcon from "./icons/search-icon";
 import UserIcon from "./icons/user-icon";
 import NewFolderInput from "./new-folder-input";
 import type { ItemToAdd } from "./client-container";
+import FileIcon from "./icons/file-icon";
 
 interface SideBarProps {
   folders: {
@@ -29,13 +30,31 @@ interface SideBarProps {
   selectedFolder: number;
   addMockInput: (inputType: ItemToAdd) => void;
   isAddingItem: ItemToAdd; // To know if the input UI is visible
-  submitAction: (formData: FormData) => void;
-  isPending: boolean;
-  formState: {
-    message: string | null;
+
+  formActions: {
+    create: ItemAction;
+    edit: ItemAction;
+    delete: ItemAction;
   };
   cancelInput: (inputType: ItemToAdd) => void;
 }
+
+export type ItemAction = {
+  folder: {
+    formState: {
+      message: string | null;
+    };
+    submitAction: (formData: FormData) => void;
+    isPending: boolean;
+  };
+  file: {
+    formState: {
+      message: string | null;
+    };
+    submitAction: (formData: FormData) => void;
+    isPending: boolean;
+  };
+};
 
 export default function SideBar({
   folders,
@@ -46,9 +65,7 @@ export default function SideBar({
   selectedFolder,
   addMockInput,
   isAddingItem,
-  submitAction,
-  isPending,
-  formState,
+  formActions,
   cancelInput,
 }: SideBarProps) {
   const rootUserId =
@@ -72,10 +89,10 @@ export default function SideBar({
         // Mock folder input
         <NewFolderInput
           key={-1}
-          submitAction={submitAction}
+          submitAction={formActions.create.folder.submitAction}
           cancelInput={cancelInput}
-          isPending={isPending}
-          formState={formState}
+          isPending={formActions.create.folder.isPending}
+          formState={formActions.create.folder.formState}
           rootUserId={rootUserId}
         />
       );
@@ -92,16 +109,51 @@ export default function SideBar({
           setFile={setFile}
           setFolder={setFolder}
           selectedFolder={selectedFolder}
-          submitAction={submitAction}
+          formActions={formActions}
           cancelInput={cancelInput}
-          isPending={isPending}
-          formState={formState}
           rootUserId={rootUserId}
         />
       );
     }
   });
-
+  const renderFiles = files.map((file) => {
+    if (file.user_id === -1 && file.folder_id == null) {
+      return (
+        // Mock folder input
+        <NewFolderInput
+          key={-1}
+          submitAction={formActions.create.folder.submitAction}
+          cancelInput={cancelInput}
+          isPending={formActions.create.folder.isPending}
+          formState={formActions.create.folder.formState}
+          rootUserId={rootUserId}
+        />
+      );
+    }
+    if (file.folder_id == null) {
+      return (
+        <div
+          className="top-level-files"
+          style={{
+            backgroundColor: file.id === selectedFile ? "#646362" : "unset",
+            paddingTop: 9,
+            paddingBottom: 9,
+          }}
+          onClick={() => {
+            setFile(file.id, file.name);
+            if (file.folder_id) {
+              setFolder(file.folder_id);
+            } else {
+              setFolder(0);
+            }
+          }}
+          key={file.id}
+        >
+          <FileIcon /> {file.name}
+        </div>
+      );
+    }
+  });
   const handleParentClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
@@ -156,6 +208,7 @@ export default function SideBar({
         }}
       >
         <div className="explorer">{renderFolders}</div>
+        <div className="files-explorer">{renderFiles}</div>
       </div>
     </div>
   );
