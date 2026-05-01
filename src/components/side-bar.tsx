@@ -9,6 +9,7 @@ import UserIcon from "./icons/user-icon";
 import NewFolderInput from "./new-folder-input";
 import type { ItemToAdd } from "./client-container";
 import FileIcon from "./icons/file-icon";
+import NewFileInput from "./new-file-input";
 
 interface SideBarProps {
   folders: {
@@ -120,12 +121,12 @@ export default function SideBar({
     if (file.user_id === -1 && file.folder_id == null) {
       return (
         // Mock folder input
-        <NewFolderInput
+        <NewFileInput
           key={-1}
-          submitAction={formActions.create.folder.submitAction}
+          submitAction={formActions.create.file.submitAction}
           cancelInput={cancelInput}
-          isPending={formActions.create.folder.isPending}
-          formState={formActions.create.folder.formState}
+          isPending={formActions.create.file.isPending}
+          formState={formActions.create.file.formState}
           rootUserId={rootUserId}
         />
       );

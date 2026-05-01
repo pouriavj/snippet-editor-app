@@ -113,7 +113,38 @@ export async function createFile(
   prevState: { message: string },
   formData: FormData,
 ) {
-  return { message: "" };
+  try {
+    const name = formData.get("name") as string;
+    const folderId = formData.get("folder_id") as string; // Parent Folder
+    const userId = formData.get("user_id") as string; // User Id
+
+    // Validation
+    if (typeof name !== "string" || name.length < 1) {
+      return { message: "error: name is required" };
+    }
+
+    // Parse IDs (null if empty/undefined)
+    const parsedFolderId = folderId ? parseInt(folderId) : null;
+    const parsedUserId = userId ? parseInt(userId) : null;
+
+    // Insert query
+    const newFile = await db.query(
+      "INSERT INTO files (name, folder_id, user_id, content) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, parsedFolderId, parsedUserId, ""],
+    );
+
+    console.log("Created file:", newFile.rows[0]);
+
+    revalidatePath("/"); // Revalidate after success
+
+    // return a state object for useActionState
+    return { message: "success" };
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong...";
+    console.error("Create file error:", message);
+    return { message: `error: ${message}` };
+  }
 }
 
 // Edit Folder

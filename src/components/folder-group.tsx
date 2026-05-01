@@ -5,8 +5,10 @@ import ClosedFolderIcon from "./icons/closed-folder-icon";
 import OpenFolderIcon from "./icons/open-folder-icon";
 import FileIcon from "./icons/file-icon";
 import NewFolderInput from "./new-folder-input";
+import NewFileInput from "./new-file-input";
 import type { ItemToAdd } from "./client-container";
 import type { ItemAction } from "./side-bar";
+
 
 interface FolderGroupProps {
   id: number;
@@ -105,6 +107,21 @@ export default function FolderGroup({
           );
         })}
         {childFiles.map((file) => {
+          // this mock file input only appears as child file when adding new file
+          if (file.user_id === -1) {
+            return (
+              <NewFileInput
+                key={-1}
+                submitAction={formActions.create.file.submitAction}
+                cancelInput={cancelInput}
+                isPending={formActions.create.file.isPending}
+                formState={formActions.create.file.formState}
+                rootUserId={rootUserId}
+                parentFolderId={file.folder_id}
+              />
+            );
+          }
+
           return (
             <div
               style={{
