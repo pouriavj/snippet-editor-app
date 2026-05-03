@@ -13,6 +13,8 @@ interface NewFileInputProps {
   };
   parentFolderId?: number | null;
   rootUserId: number | null;
+  id?: number;  // For reuse as rename input
+  renameFile?: (name: string) => void
 }
 
 export default function NewFileInput({
@@ -22,6 +24,8 @@ export default function NewFileInput({
   formState,
   parentFolderId,
   rootUserId,
+  id,
+  renameFile
 }: NewFileInputProps) {
   // Custom Generic Hook to handle RHF and UAS hooks submission for files and folders and also cancel mock inputs by local state and effect
   const { control, formRef, handleFormSubmit, rhfErrors } = useFormSubmission(
@@ -29,6 +33,7 @@ export default function NewFileInput({
     submitAction,
     cancelInput,
     "file",
+    renameFile // In case of rename reuse , also renames in tool-bar
   );
 
   return (
@@ -66,9 +71,20 @@ export default function NewFileInput({
             )}
           />
 
-          {/* Hidden inputs to send user_id and folder_id to server action*/}
-          <input type="hidden" name="folder_id" value={parentFolderId || ""} />
-          <input type="hidden" name="user_id" value={rootUserId || ""} />
+          {/* Hidden inputs to send user_id and folder_id to server action in case of new file*/}
+          {/* For generic use of this input, used ternary on id to send just id in case of rename usage*/}
+          {id ? (
+            <input type="hidden" name="id" value={`${id}`} />
+          ) : (
+            <>
+              <input
+                type="hidden"
+                name="folder_id"
+                value={parentFolderId || ""}
+              />
+              <input type="hidden" name="user_id" value={rootUserId || ""} />
+            </>
+          )}
 
           <button type="submit" disabled={isPending} className="save-button">
             Save

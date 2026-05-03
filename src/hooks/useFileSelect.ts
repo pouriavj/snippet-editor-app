@@ -28,6 +28,19 @@ export default function useFileSelect() {
     }
   }
 
+  // function to rename selected file in the tool-bar of editor
+  function renameFile(name: string) {
+    const renamedFileArray = fileArray.map((file) => {
+      if (file.id === selectedFile) {
+        return { id: file.id, name: name };
+      } else {
+        return file
+      }
+    });
+    setFileArray(renamedFileArray)
+  }
+
+  // function to delete file in tool-bar ui
   function deleteFile(id: number) {
     setFileArray(
       fileArray.filter((file) => {
@@ -40,5 +53,13 @@ export default function useFileSelect() {
     setSelectedFolder(id);
   }
 
-  return { selectedFile, setFile, fileArray, deleteFile , setFolder, selectedFolder};
+  return {
+    selectedFile,
+    setFile,
+    fileArray,
+    deleteFile,
+    setFolder,
+    selectedFolder,
+    renameFile
+  };
 }

@@ -11,16 +11,16 @@ const userId = 1; // Temperory no auth user_id
 
 export default async function Home() {
   const folderData = await db.query(
-    "SELECT * FROM folders WHERE user_id = $1",
+    "SELECT * FROM folders WHERE user_id = $1 ORDER BY id ASC",
     [userId],
   );
-  const fileData = await db.query("SELECT * FROM files WHERE user_id = $1", [
-    userId,
-  ]);
+  const fileData = await db.query(
+    "SELECT * FROM files WHERE user_id = $1 ORDER BY id ASC",
+    [userId],
+  );
 
   const folders = folderData.rows;
   const files = fileData.rows;
-  console.log(files);
 
   return <ClientContainer folders={folders} files={files} />;
 }

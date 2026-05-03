@@ -6,6 +6,7 @@ export function useFormSubmission<T extends FieldValues>(
   submitAction: (formData: FormData) => void,
   cancelAction: (type: ItemToAdd) => void,
   cancelType: ItemToAdd,
+  renameFile?: (name: string) => void,   // function to rename file in editor tool-bar (resued for edit)
 ) {
   // Initialize React Hook Form
   // Trigger For manually triggering RHF to bypass form onSubmit method which is used by useActionState hook
@@ -66,6 +67,14 @@ export function useFormSubmission<T extends FieldValues>(
       cancelAction(cancelType);
       reset();
       setIsSubmitted(false);
+      // In case of rename reuse, fetches formdata to also set editors tool-bar file-array to renamed files
+      if (renameFile && formRef.current) {
+        const formData = new FormData(formRef.current);
+        const newName = formData.get("name") as string;
+        if (newName) {
+          renameFile(newName);
+        }
+      }
     }
   }, [isSubmitted]);
 

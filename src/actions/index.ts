@@ -162,7 +162,34 @@ export async function editFile(
   prevState: { message: string },
   formData: FormData,
 ) {
-  return { message: "" };
+  try {
+    const name = formData.get("name") as string;
+    const id = formData.get("id") as string; // get id for rename reuse
+
+    // Validation
+    if (typeof name !== "string" || name.length < 1) {
+      return { message: "error: name is required" };
+    }
+
+    // Parse IDs (null if empty/undefined)
+    const parsedId = id ? parseInt(id) : null;
+
+    // Update query
+    await db.query("UPDATE files SET name = $1 WHERE id = $2", [
+      name,
+      parsedId,
+    ]);
+
+    revalidatePath("/"); // Revalidate after success
+
+    // return a state object for useActionState
+    return { message: "success" };
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong...";
+    console.error("Create file error:", message);
+    return { message: `error: ${message}` };
+  }
 }
 
 // Delete Folder
@@ -176,9 +203,31 @@ export async function deleteFolder(
 
 // Delete File
 
+// Delete File
 export async function deleteFile(
   prevState: { message: string },
   formData: FormData,
 ) {
-  return { message: "" };
+  try {
+    const fileId = formData.get("file_id") as string;
+
+    if (typeof fileId !== "string" || fileId.length < 1) {
+      return { message: "error: file_id is required" };
+    }
+
+    const parsedFileId = parseInt(fileId);
+    if (Number.isNaN(parsedFileId)) {
+      return { message: "error: file_id is invalid" };
+    }
+
+    await db.query("DELETE FROM files WHERE id = $1", [parsedFileId]);
+
+    revalidatePath("/");
+    return { message: "success" };
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong...";
+    console.error("Delete file error:", message);
+    return { message: `error: ${message}` };
+  }
 }

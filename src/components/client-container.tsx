@@ -29,8 +29,7 @@ export default function ClientContainer({
   folders,
   files,
 }: CilentContainerProps) {
-
-  // useFileSelect custom hook init
+  // useFileSelect custom hook initialize, Select delete edit selected files in editor tool-bar and as active files in side bar (Generic reusable hook)
   const {
     selectedFile,
     setFile,
@@ -38,16 +37,16 @@ export default function ClientContainer({
     deleteFile,
     setFolder,
     selectedFolder,
+    renameFile
   } = useFileSelect();
-  
+
   // useFormAction custom hook init
   const formActions = useFormAction();
 
   const [isAddingItem, setIsAddingItem] = useState<ItemToAdd>("none"); // Manage visibility of folder/file input
   const [newFolderArray, setNewFolderArray] = useState(folders); // Makes new folder array to contains a mock child folder input for better Ui vs-code style
   const [newFileArray, setNewFileArray] = useState(files); // Makes new file array to contains a mock child file input for better Ui vs-code style
-
-  
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
@@ -96,13 +95,37 @@ export default function ClientContainer({
     }
   };
 
+  const addMockRenameInput = (itemType: ItemToAdd): void => {
+    if (itemType === "folder") {
+    }
+    if (itemType === "file") {
+      setNewFileArray((prevValue) => {
+        const filesWithoutInput = prevValue.filter((f) => f.user_id !== -1);
+        return filesWithoutInput.map((file) => {
+          if (file.id === selectedFile) {
+            return {
+              id: newFileArray.length + 1,
+              name: "input",
+              user_id: -2,
+              folder_id: selectedFolder === 0 ? null : selectedFolder,
+              content: "",
+            };
+          } else {
+            return file;
+          }
+        });
+      });
+      setIsAddingItem("file");
+    }
+  };
+
   const cancelInput = (inputType: ItemToAdd): void => {
     if (inputType === "folder") {
       // Remove the temporary folder object from the state
       setNewFolderArray(folders);
       setIsAddingItem("none"); // Set state to false
     } else if (inputType === "file") {
-      // Remove the temporary folder object from the state
+      // Remove the temporary file object from the state
       setNewFileArray(files);
       setIsAddingItem("none"); // Set state to false
     }
@@ -117,6 +140,8 @@ export default function ClientContainer({
     } else if (isAddingItem === "file") {
       cancelInput("file");
       setIsAddingItem("none");
+    } else if (isPopupOpen) {
+      setIsPopupOpen(false);
     }
   };
 
@@ -133,6 +158,11 @@ export default function ClientContainer({
         isAddingItem={isAddingItem}
         formActions={formActions}
         cancelInput={cancelInput}
+        deleteFile={deleteFile}
+        isPopupOpen={isPopupOpen}
+        setIsPopupOpen={setIsPopupOpen}
+        addMockRenameInput={addMockRenameInput}
+        renameFile={renameFile}
       />
       <MyEditor
         snippet={{

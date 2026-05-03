@@ -10,7 +10,6 @@ import NewFolderInput from "./new-folder-input";
 import type { ItemToAdd } from "./client-container";
 import FileIcon from "./icons/file-icon";
 import NewFileInput from "./new-file-input";
-import EllipsisIcon from "./icons/ellipsis-icon";
 import EllipsisHandler from "./ellipsis-handler";
 
 interface SideBarProps {
@@ -40,6 +39,11 @@ interface SideBarProps {
     delete: ItemAction;
   };
   cancelInput: (inputType: ItemToAdd) => void;
+  deleteFile: (id: number) => void;
+  isPopupOpen: boolean;
+  setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  addMockRenameInput: (itemType: ItemToAdd) => void;
+  renameFile: (name: string) => void;
 }
 
 export type ItemAction = {
@@ -70,6 +74,11 @@ export default function SideBar({
   isAddingItem,
   formActions,
   cancelInput,
+  deleteFile,
+  isPopupOpen,
+  setIsPopupOpen,
+  addMockRenameInput,
+  renameFile,
 }: SideBarProps) {
   const rootUserId =
     folders.find((f) => f.folder_id === null && f.user_id !== -1)?.user_id ||
@@ -83,6 +92,47 @@ export default function SideBar({
       return file.folder_id === folderId;
     });
     return { childFolders, childFiles };
+  };
+
+  const handleAdd = (itemType: ItemToAdd): void => {
+    if (itemType === "folder") {
+      if (isAddingItem === "file") {
+        cancelInput("file");
+      } else {
+        addMockInput("folder");
+      }
+    } else if (itemType === "file") {
+      if (isAddingItem === "folder") {
+        cancelInput("folder");
+      } else {
+        addMockInput("file");
+      }
+    }
+  };
+  const handleEdit = (itemType: ItemToAdd) => {
+    if (itemType === "folder") {
+      if (isAddingItem === "file") {
+        cancelInput("file");
+      } else {
+        addMockRenameInput("folder");
+      }
+    } else if (itemType === "file") {
+      if (isAddingItem === "folder") {
+        cancelInput("folder");
+      } else {
+        addMockRenameInput("file");
+      }
+    }
+  };
+
+  const handleParentClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    e.stopPropagation();
+    // Only runs when the parent itself is clicked, not any child
+    if (e.target === e.currentTarget) {
+      setFolder(0);
+    }
   };
 
   const renderFolders = folders.map((folder) => {
@@ -122,7 +172,7 @@ export default function SideBar({
   const renderFiles = files.map((file) => {
     if (file.user_id === -1 && file.folder_id == null) {
       return (
-        // Mock folder input
+        // Mock new file input
         <NewFileInput
           key={-1}
           submitAction={formActions.create.file.submitAction}
@@ -132,8 +182,21 @@ export default function SideBar({
           rootUserId={rootUserId}
         />
       );
-    }
-    if (file.folder_id == null) {
+    } else if (file.user_id === -2 && file.folder_id == null) {
+      return (
+        // Mock rename file input (reused new file input with optional props for renaming file in side bar and editor)
+        <NewFileInput
+          key={-2}
+          submitAction={formActions.edit.file.submitAction}
+          cancelInput={cancelInput}
+          isPending={formActions.edit.file.isPending}
+          formState={formActions.edit.file.formState}
+          rootUserId={rootUserId}
+          renameFile={renameFile}
+          id={selectedFile}
+        />
+      );
+    } else if (file.folder_id == null) {
       return (
         <div
           className="top-level-files"
@@ -154,37 +217,22 @@ export default function SideBar({
         >
           <FileIcon /> {file.name}
           {file.id === selectedFile && (
-            <EllipsisHandler id={file.id} type="file" />
+            <EllipsisHandler
+              id={file.id}
+              type="file"
+              editActions={formActions.edit}
+              deleteActions={formActions.delete}
+              cancelInput={cancelInput}
+              deleteFile={deleteFile}
+              isPopupOpen={isPopupOpen}
+              setIsPopupOpen={setIsPopupOpen}
+              handleEdit={handleEdit}
+            />
           )}
         </div>
       );
     }
   });
-  const handleParentClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
-    e.stopPropagation();
-    // Only runs when the parent itself is clicked, not any child
-    if (e.target === e.currentTarget) {
-      setFolder(0);
-    }
-  };
-
-  const handleAdd = (itemType: ItemToAdd): void => {
-    if (itemType === "folder") {
-      if (isAddingItem === "file") {
-        cancelInput("file");
-      } else {
-        addMockInput("folder");
-      }
-    } else if (itemType === "file") {
-      if (isAddingItem === "folder") {
-        cancelInput("folder");
-      } else {
-        addMockInput("file");
-      }
-    }
-  };
 
   return (
     <div className="side-bar">
