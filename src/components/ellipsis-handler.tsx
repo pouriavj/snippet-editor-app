@@ -7,32 +7,38 @@ import { ItemToAdd } from "./client-container";
 
 interface EllipsisHandlerProps {
   id: number;
-  type: ItemType;
-  editActions: ItemAction;
+  type: ItemToAdd;
+
   deleteActions: ItemAction;
   cancelInput: (inputType: ItemToAdd) => void;
   deleteFile: (id: number) => void;
   isPopupOpen: boolean; // For canceling popup if clicked outside
-  setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
   handleEdit: (itemType: ItemToAdd) => void;
+  handleToggle: (type: ItemToAdd, id: number) => void;
+  toggleState: {
+    popupType: ItemToAdd;
+    itemId: number;
+  };
 }
-type ItemType = "folder" | "file";
+
 export default function EllipsisHandler({
   id,
   type,
-  editActions,
+
   deleteActions,
   cancelInput,
   deleteFile,
   isPopupOpen,
-  setIsPopupOpen,
+
   handleEdit,
+  handleToggle,
+  toggleState,
 }: EllipsisHandlerProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [toggle, setToggle] = useState(false);
 
   // Handle submit
-  const handleDelete = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleDeleteFile = (e: React.SubmitEvent<HTMLFormElement>) => {
     // No async function used
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -43,43 +49,58 @@ export default function EllipsisHandler({
     });
   };
 
-  const handleEditEventHandler = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleDeleteFolder = (e: React.SubmitEvent<HTMLFormElement>) => {
+    // No async function used
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    formData.set("folder_id", `${id}`);
+    startTransition(() => {
+      deleteActions.folder.submitAction(formData);
+      setIsSubmitted(true);
+    });
+  };
+
+  const handleFileEditEventHandler = (
+    e: React.SubmitEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
     handleEdit("file");
+  };
+  const handleFolderEditEventHandler = (
+    e: React.SubmitEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+    handleEdit("folder");
   };
 
   // Becuse deleting file from db is an async server action state doesnt rerender immidietly , so by resetting files state in the container
   // with the side effect of submitting local state , files update dynamicly (no async function in client component)
   useEffect(() => {
-    if (isSubmitted) {
-      cancelInput("file");
-      setIsSubmitted(false);
-      deleteFile(id); // Also delete file from tool-bar in editor
+    if (type === "file") {
+      if (isSubmitted) {
+        cancelInput("file");
+        setIsSubmitted(false);
+        deleteFile(id); // Also delete file from tool-bar in editor
+      }
+    } else if (type === "folder") {
+      if (isSubmitted) {
+        cancelInput("folder");
+        setIsSubmitted(false);
+        // deleteFile(id); // Also delete file from tool-bar in editor
+      }
     }
   }, [isSubmitted]);
 
-  return (
-    <div className="ellipsis-container">
-      <div
-        className="ellipsis"
-        onClick={(e) => {
-          e.stopPropagation(); // to prevent cancel
-          if (!isPopupOpen) {
-            // its for first time that isPopUpopen is false (just opens it)
-            setToggle(true);
-          } else {
-            setToggle((prev) => !prev); // if popup was open then make ellipsis toggle
-          }
-
-          setIsPopupOpen(true); // becuse ellipsis stops propagation clicking on it the second time would make it false (this if else is for both making ellipsis toggle and also make click outside popup cancel)
-        }}
-      >
-        <EllipsisIcon />
-      </div>
-      {toggle && isPopupOpen && (
+  function renderPopup() {
+    if (
+      toggleState.popupType === "folder" &&
+      toggleState.itemId === id &&
+      isPopupOpen
+    ) {
+      return (
         <div className="pop-up">
           <div className="edit-buttons-container">
-            <form onSubmit={handleEditEventHandler}>
+            <form onSubmit={handleFolderEditEventHandler}>
               <button
                 onClick={(e) => e.stopPropagation()} // this added onclick is to prevent global click handler (cancel) when this button is clicked
                 type="submit"
@@ -89,7 +110,7 @@ export default function EllipsisHandler({
               </button>
             </form>
 
-            <form onSubmit={handleDelete}>
+            <form onSubmit={handleDeleteFolder}>
               <button
                 onClick={(e) => e.stopPropagation()} // this added onclick is to prevent global click handler (cancel) when this button is clicked
                 type="submit"
@@ -100,7 +121,55 @@ export default function EllipsisHandler({
             </form>
           </div>
         </div>
-      )}
+      );
+    } else if (
+      toggleState.popupType === "file" &&
+      toggleState.itemId === id &&
+      isPopupOpen
+    ) {
+      return (
+        <div className="pop-up">
+          <div className="edit-buttons-container">
+            <form onSubmit={handleFileEditEventHandler}>
+              <button
+                onClick={(e) => e.stopPropagation()} // this added onclick is to prevent global click handler (cancel) when this button is clicked
+                type="submit"
+                className="rename-button"
+              >
+                Rename
+              </button>
+            </form>
+
+            <form onSubmit={handleDeleteFile}>
+              <button
+                onClick={(e) => e.stopPropagation()} // this added onclick is to prevent global click handler (cancel) when this button is clicked
+                type="submit"
+                className="delete-button"
+              >
+                Delete
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  return (
+    <div
+      className="ellipsis-container"
+      style={{ marginRight: type === "file" ? 12 : -4 }}
+    >
+      <div
+        className="ellipsis"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleToggle(type, id);
+        }}
+      >
+        <EllipsisIcon />
+      </div>
+      {renderPopup()}
     </div>
   );
 }

@@ -12,6 +12,8 @@ interface NewFolderInputProps {
   };
   parentFolderId?: number | null;
   rootUserId: number | null;
+  id?: number; // For reuse as rename input
+  defaultValue?: string;
 }
 
 export default function NewFolderInput({
@@ -21,10 +23,12 @@ export default function NewFolderInput({
   formState,
   parentFolderId,
   rootUserId,
+  id,
+  defaultValue,
 }: NewFolderInputProps) {
   // Custom Generic Hook to handle RHF and UAS hooks submission for files and folders and also cancel mock inputs by local state and effect
   const { control, formRef, handleFormSubmit, rhfErrors } = useFormSubmission(
-    { name: "" },
+    { name: defaultValue ? defaultValue : "" },
     submitAction,
     cancelInput,
     "folder",
@@ -66,9 +70,18 @@ export default function NewFolderInput({
           />
 
           {/* Hidden inputs to send user_id and folder_id to server action*/}
-          <input type="hidden" name="folder_id" value={parentFolderId || ""} />
-          <input type="hidden" name="user_id" value={rootUserId || ""} />
-
+          {id ? (
+            <input type="hidden" name="id" value={`${id}`} />
+          ) : (
+            <>
+              <input
+                type="hidden"
+                name="folder_id"
+                value={parentFolderId || ""}
+              />
+              <input type="hidden" name="user_id" value={rootUserId || ""} />
+            </>
+          )}
           <button type="submit" disabled={isPending} className="save-button">
             Save
           </button>

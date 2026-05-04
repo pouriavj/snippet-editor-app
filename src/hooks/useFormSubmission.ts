@@ -6,7 +6,7 @@ export function useFormSubmission<T extends FieldValues>(
   submitAction: (formData: FormData) => void,
   cancelAction: (type: ItemToAdd) => void,
   cancelType: ItemToAdd,
-  renameFile?: (name: string) => void,   // function to rename file in editor tool-bar (resued for edit)
+  renameFile?: (name: string) => void,   // function to rename file in editor tool-bar (in case of resued for edit)
 ) {
   // Initialize React Hook Form
   // Trigger For manually triggering RHF to bypass form onSubmit method which is used by useActionState hook

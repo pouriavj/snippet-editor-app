@@ -13,8 +13,9 @@ interface NewFileInputProps {
   };
   parentFolderId?: number | null;
   rootUserId: number | null;
-  id?: number;  // For reuse as rename input
-  renameFile?: (name: string) => void
+  id?: number; // For reuse as rename input
+  renameFile?: (name: string) => void;  // renaming file in editor tool-bar
+  defaultValue?: string;
 }
 
 export default function NewFileInput({
@@ -25,22 +26,23 @@ export default function NewFileInput({
   parentFolderId,
   rootUserId,
   id,
-  renameFile
+  renameFile,
+  defaultValue,
 }: NewFileInputProps) {
   // Custom Generic Hook to handle RHF and UAS hooks submission for files and folders and also cancel mock inputs by local state and effect
   const { control, formRef, handleFormSubmit, rhfErrors } = useFormSubmission(
-    { name: "" },
+    { name: defaultValue ? defaultValue : "" },
     submitAction,
     cancelInput,
     "file",
-    renameFile // In case of rename reuse , also renames in tool-bar
+    renameFile, // In case of rename reuse , also renames in tool-bar
   );
 
   return (
     <div
       className="folder-title"
       style={{
-        marginLeft: parentFolderId ? 44 : 28,
+        marginLeft: parentFolderId ? 24 : 28,
         marginTop: parentFolderId ? 20 : 8,
         alignItems: "flex-start",
       }}

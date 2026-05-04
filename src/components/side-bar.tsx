@@ -11,6 +11,7 @@ import type { ItemToAdd } from "./client-container";
 import FileIcon from "./icons/file-icon";
 import NewFileInput from "./new-file-input";
 import EllipsisHandler from "./ellipsis-handler";
+import { useState } from "react";
 
 interface SideBarProps {
   folders: {
@@ -80,6 +81,33 @@ export default function SideBar({
   addMockRenameInput,
   renameFile,
 }: SideBarProps) {
+  const [toggleState, setToggleState] = useState<{
+    popupType: ItemToAdd;
+    itemId: number;
+  }>({
+    popupType: "none",
+    itemId: 0,
+  });
+  const handleToggle = (type: ItemToAdd, id: number) => {
+    if (type === "file") {
+      if (!isPopupOpen) {
+        // its for first time that isPopUpopen is false (just opens it)
+        setToggleState({ popupType: "file", itemId: id });
+        setIsPopupOpen(true);
+      } else {
+        setIsPopupOpen(false);
+      }
+    } else if (type === "folder") {
+      if (!isPopupOpen) {
+        // its for first time that isPopUpopen is false (just opens it)
+        setToggleState({ popupType: "folder", itemId: id });
+        setIsPopupOpen(true);
+      } else {
+        setIsPopupOpen(false);
+      }
+    }
+    // becuse ellipsis stops propagation clicking on it the second time would make it false (this if else is for both making ellipsis toggle and also make click outside popup cancel)
+  };
   const rootUserId =
     folders.find((f) => f.folder_id === null && f.user_id !== -1)?.user_id ||
     null;
@@ -149,6 +177,20 @@ export default function SideBar({
           rootUserId={rootUserId}
         />
       );
+    } else if (folder.user_id === -2 && folder.folder_id == null) {
+      return (
+        // Mock rename file input (reused new file input with optional props for renaming file in side bar and editor)
+        <NewFolderInput
+          key={-2}
+          submitAction={formActions.edit.folder.submitAction}
+          cancelInput={cancelInput}
+          isPending={formActions.edit.folder.isPending}
+          formState={formActions.edit.folder.formState}
+          rootUserId={rootUserId}
+          id={selectedFolder}
+          defaultValue={folder.name}
+        />
+      );
     }
 
     if (folder.folder_id == null) {
@@ -165,6 +207,13 @@ export default function SideBar({
           formActions={formActions}
           cancelInput={cancelInput}
           rootUserId={rootUserId}
+          handleEdit={handleEdit}
+          isPopupOpen={isPopupOpen}
+          setIsPopupOpen={setIsPopupOpen}
+          deleteFile={deleteFile}
+          renameFile={renameFile}
+          handleToggle={handleToggle}
+          toggleState={toggleState}
         />
       );
     }
@@ -194,6 +243,7 @@ export default function SideBar({
           rootUserId={rootUserId}
           renameFile={renameFile}
           id={selectedFile}
+          defaultValue={file.name}
         />
       );
     } else if (file.folder_id == null) {
@@ -220,13 +270,13 @@ export default function SideBar({
             <EllipsisHandler
               id={file.id}
               type="file"
-              editActions={formActions.edit}
               deleteActions={formActions.delete}
               cancelInput={cancelInput}
               deleteFile={deleteFile}
               isPopupOpen={isPopupOpen}
-              setIsPopupOpen={setIsPopupOpen}
               handleEdit={handleEdit}
+              handleToggle={handleToggle}
+              toggleState={toggleState}
             />
           )}
         </div>

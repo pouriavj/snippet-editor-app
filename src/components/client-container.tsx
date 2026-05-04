@@ -37,7 +37,7 @@ export default function ClientContainer({
     deleteFile,
     setFolder,
     selectedFolder,
-    renameFile
+    renameFile,
   } = useFileSelect();
 
   // useFormAction custom hook init
@@ -97,6 +97,22 @@ export default function ClientContainer({
 
   const addMockRenameInput = (itemType: ItemToAdd): void => {
     if (itemType === "folder") {
+      setNewFolderArray((prevValue) => {
+        const foldersWithoutInput = prevValue.filter((f) => f.user_id !== -1);
+        return foldersWithoutInput.map((folder) => {
+          if (folder.id === selectedFolder) {
+            return {
+              id: folder.id,
+              name: folder.name,
+              user_id: -2,
+              folder_id: folder.folder_id,
+            };
+          } else {
+            return folder;
+          }
+        });
+      });
+      setIsAddingItem("folder");
     }
     if (itemType === "file") {
       setNewFileArray((prevValue) => {
@@ -104,10 +120,10 @@ export default function ClientContainer({
         return filesWithoutInput.map((file) => {
           if (file.id === selectedFile) {
             return {
-              id: newFileArray.length + 1,
-              name: "input",
+              id: file.id,
+              name: file.name,
               user_id: -2,
-              folder_id: selectedFolder === 0 ? null : selectedFolder,
+              folder_id: file.folder_id,
               content: "",
             };
           } else {
@@ -129,6 +145,7 @@ export default function ClientContainer({
       setNewFileArray(files);
       setIsAddingItem("none"); // Set state to false
     }
+    setIsPopupOpen(false);
   };
 
   const handleGlobalClick = () => {

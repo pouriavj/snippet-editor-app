@@ -29,7 +29,7 @@ body {
 }
 
 .explorer {
-  margin-top: 78px;
+  margin-top: 94px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -226,7 +226,7 @@ input:focus {
 
 .ellipsis-container {
   margin-left: auto;
-  margin-right: 16px;
+  
 }
 .ellipsis {
   padding: 8px;

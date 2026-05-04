@@ -8,7 +8,7 @@ import NewFolderInput from "./new-folder-input";
 import NewFileInput from "./new-file-input";
 import type { ItemToAdd } from "./client-container";
 import type { ItemAction } from "./side-bar";
-
+import EllipsisHandler from "./ellipsis-handler";
 
 interface FolderGroupProps {
   id: number;
@@ -40,6 +40,16 @@ interface FolderGroupProps {
   };
   rootUserId: number | null;
   cancelInput: (inputType: ItemToAdd) => void;
+  renameFile: (name: string) => void;
+  deleteFile: (id: number) => void;
+  isPopupOpen: boolean;
+  setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleEdit: (itemType: ItemToAdd) => void;
+  handleToggle: (type: ItemToAdd, id: number) => void;
+  toggleState: {
+    popupType: ItemToAdd;
+    itemId: number;
+  };
 }
 // This is the nested folder group structure that returns itself inside it (tree structure)
 export default function FolderGroup({
@@ -54,6 +64,13 @@ export default function FolderGroup({
   formActions,
   cancelInput,
   rootUserId,
+  renameFile,
+  deleteFile,
+  isPopupOpen,
+  setIsPopupOpen,
+  handleEdit,
+  handleToggle,
+  toggleState,
 }: FolderGroupProps) {
   const [direction, setDirection] = useState("right");
 
@@ -84,6 +101,21 @@ export default function FolderGroup({
                 parentFolderId={folder.folder_id}
               />
             );
+          } else if (folder.user_id === -2) {
+            return (
+              // Mock rename file input (reused new file input with optional props for renaming file in side bar and editor)
+              <NewFolderInput
+                key={-2}
+                submitAction={formActions.edit.folder.submitAction}
+                cancelInput={cancelInput}
+                isPending={formActions.edit.folder.isPending}
+                formState={formActions.edit.folder.formState}
+                rootUserId={rootUserId}
+                id={selectedFolder}
+                parentFolderId={folder.folder_id}
+                defaultValue={folder.name}
+              />
+            );
           }
 
           return (
@@ -99,9 +131,14 @@ export default function FolderGroup({
                 selectedFolder={selectedFolder}
                 formActions={formActions}
                 cancelInput={cancelInput}
-                
-                
+                handleEdit={handleEdit}
+                renameFile={renameFile}
                 rootUserId={rootUserId}
+                isPopupOpen={isPopupOpen}
+                setIsPopupOpen={setIsPopupOpen}
+                deleteFile={deleteFile}
+                handleToggle={handleToggle}
+                toggleState={toggleState}
               />
             </div>
           );
@@ -119,6 +156,26 @@ export default function FolderGroup({
                 rootUserId={rootUserId}
                 parentFolderId={file.folder_id}
               />
+            );
+          } else if (file.user_id === -2) {
+            return (
+              // Mock rename file input (reused new file input with optional props for renaming file in side bar and editor)
+              <div
+                key={-2}
+                style={{ marginLeft: `${count * 6}px`, marginTop: 16 }}
+              >
+                <NewFileInput
+                  submitAction={formActions.edit.file.submitAction}
+                  cancelInput={cancelInput}
+                  isPending={formActions.edit.file.isPending}
+                  formState={formActions.edit.file.formState}
+                  rootUserId={rootUserId}
+                  renameFile={renameFile}
+                  id={selectedFile}
+                  parentFolderId={file.folder_id}
+                  defaultValue={file.name}
+                />
+              </div>
             );
           }
 
@@ -144,6 +201,19 @@ export default function FolderGroup({
                 style={{ paddingLeft: `${count * 16}px` }}
               >
                 <FileIcon /> {file.name}
+                {file.id === selectedFile && (
+                  <EllipsisHandler
+                    id={file.id}
+                    type="file"
+                    deleteActions={formActions.delete}
+                    cancelInput={cancelInput}
+                    deleteFile={deleteFile}
+                    isPopupOpen={isPopupOpen}
+                    handleEdit={handleEdit}
+                    handleToggle={handleToggle}
+                    toggleState={toggleState}
+                  />
+                )}
               </div>
             </div>
           );
@@ -163,8 +233,20 @@ export default function FolderGroup({
       >
         <ChevronIcon direction={direction} />
         {direction === "bottom" ? <OpenFolderIcon /> : <ClosedFolderIcon />}
-
-        {name}
+        {name}{" "}
+        {id === selectedFolder && (
+          <EllipsisHandler
+            id={id}
+            type="folder"
+            deleteActions={formActions.delete}
+            cancelInput={cancelInput}
+            deleteFile={deleteFile}
+            isPopupOpen={isPopupOpen}
+            handleEdit={handleEdit}
+            handleToggle={handleToggle}
+            toggleState={toggleState}
+          />
+        )}
       </div>
       {direction === "bottom" && renderChildren(id)}
     </div>

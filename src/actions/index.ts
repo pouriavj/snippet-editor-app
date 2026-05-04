@@ -153,7 +153,34 @@ export async function editFolder(
   prevState: { message: string },
   formData: FormData,
 ) {
-  return { message: "" };
+  try {
+    const name = formData.get("name") as string;
+    const id = formData.get("id") as string; // get id for rename reuse
+
+    // Validation
+    if (typeof name !== "string" || name.length < 1) {
+      return { message: "error: name is required" };
+    }
+
+    // Parse IDs (null if empty/undefined)
+    const parsedId = id ? parseInt(id) : null;
+
+    // Update query
+    await db.query("UPDATE folders SET name = $1 WHERE id = $2", [
+      name,
+      parsedId,
+    ]);
+
+    revalidatePath("/"); // Revalidate after success
+
+    // return a state object for useActionState
+    return { message: "success" };
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong...";
+    console.error("Rename folder error:", message);
+    return { message: `error: ${message}` };
+  }
 }
 
 // Edit File
@@ -187,7 +214,7 @@ export async function editFile(
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "Something went wrong...";
-    console.error("Create file error:", message);
+    console.error("Rename file error:", message);
     return { message: `error: ${message}` };
   }
 }
@@ -198,10 +225,32 @@ export async function deleteFolder(
   prevState: { message: string },
   formData: FormData,
 ) {
-  return { message: "" };
+  try {
+    const folderId = formData.get("folder_id") as string;
+
+    if (typeof folderId !== "string" || folderId.length < 1) {
+      return { message: "error: folder_id is required" };
+    }
+
+    const parsedFolderId = parseInt(folderId);
+    if (Number.isNaN(parsedFolderId)) {
+      return { message: "error: folder_id is invalid" };
+    }
+
+    await db.query("DELETE FROM folders WHERE id = $1", [parsedFolderId]);
+
+    revalidatePath("/");
+    return { message: "success" };
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong...";
+    console.error("Delete folder error:", message);
+    return { message: `error: ${message}` };
+  }
 }
 
-// Delete File
+
+
 
 // Delete File
 export async function deleteFile(
