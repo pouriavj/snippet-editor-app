@@ -233,7 +233,7 @@ export default function FolderGroup({
       >
         <ChevronIcon direction={direction} />
         {direction === "bottom" ? <OpenFolderIcon /> : <ClosedFolderIcon />}
-        {name}{" "}
+        {name}
         {id === selectedFolder && (
           <EllipsisHandler
             id={id}
