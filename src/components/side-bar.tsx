@@ -307,7 +307,7 @@ export default function SideBar({
         )}
       </div>
       <div
-        style={{ height: "100%" }}
+      style={{height: "94%"}}
         onMouseDown={(e) => {
           handleParentClick(e);
         }}

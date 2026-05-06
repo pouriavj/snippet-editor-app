@@ -1,3 +1,8 @@
+html {
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 body {
   height: 100%;
   width: 100%;
@@ -6,13 +11,39 @@ body {
 .main-container {
   display: flex;
   flex-direction: row;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 .side-bar {
-  height: 100vh;
+  height: 100%;
   width: 24%;
   background-color: #4e4d4c;
   position: relative;
+  overflow-y: auto;
+  scrollbar-width: thin;
+
+  scrollbar-color: rgba(4, 194, 178, 0.7) rgba(41, 41, 41, 0.9);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #292929;
+  border-radius: 999px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #04c2b2, #0395a8);
+  border-radius: 999px;
+  border: 2px solid #292929;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0395a8, #027a8a);
 }
 
 .header-container {
@@ -29,7 +60,7 @@ body {
 }
 
 .explorer {
-  margin-top: 94px;
+  padding-top: 94px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -95,11 +126,13 @@ body {
 
 .editor {
   width: 100%;
+  position: relative;
+  height: 100%;
 }
 
 .tool-bar {
   display: flex;
-  max-height: 32px;
+  max-height: 36px;
   background-color: #161616;
   color: #e9edf2;
 }
@@ -112,7 +145,7 @@ body {
   font-family: "Google Sans";
   font-size: 12px;
   cursor: pointer;
-  padding: 6px 10px 6px 16px;
+  padding: 10px 12px 10px 16px;
   border: 1px solid #292929;
   border-left: none;
 }
@@ -147,8 +180,16 @@ body {
 
 .button {
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8;
+  margin: -8;
+  border-radius: 8;
 }
-
+.button:hover{
+  background-color: #75757565;
+}
 .new-form {
   display: flex;
   justify-content: center;
@@ -226,7 +267,6 @@ input:focus {
 
 .ellipsis-container {
   margin-left: auto;
-  
 }
 .ellipsis {
   padding: 8px;
@@ -245,15 +285,13 @@ input:focus {
   justify-content: center;
   align-items: center;
   right: 16;
- 
 
   border-radius: 8px;
   gap: 16px;
   font-family: "Google Sans";
   font-size: 12px;
   font-weight: 600;
- box-shadow: 0 0px 3px rgba(0, 0, 0, 0.329);
-
+  box-shadow: 0 0px 3px rgba(0, 0, 0, 0.329);
 }
 
 .edit-buttons-container {
@@ -267,7 +305,7 @@ input:focus {
   flex-direction: column;
   justify-content: center;
   align-items: center;
- background-color: rgb(37, 37, 37);
+  background-color: rgb(37, 37, 37);
   font-family: "Google Sans";
   font-size: 14px;
   color: #cecece;
@@ -286,7 +324,7 @@ input:focus {
 }
 .delete-button {
   padding: 8px 12px;
- background-color: rgb(37, 37, 37);
+  background-color: rgb(37, 37, 37);
 
   color: rgb(253, 134, 134);
   border-bottom-left-radius: 8px;
@@ -295,10 +333,9 @@ input:focus {
   width: 100%;
   font-family: "Google Sans";
   font-size: 14px;
-  
 
   border: none;
- 
+
   cursor: pointer;
   transition:
     background-color 0.2s ease,
@@ -325,13 +362,11 @@ input:focus {
   background-color: #666;
   border-top-right-radius: 8px;
   border-top-left-radius: 8px;
- 
 }
 .delete-button:hover {
   background-color: #666;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
- 
 }
 /* Dark overlay behind the modal */
 .modal-backdrop {
@@ -430,4 +465,30 @@ input:focus {
     opacity: 1;
     transform: translateY(0);
   }
+}
+.save {
+  position: absolute;
+  right: 32px;
+  top: 16px;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 50%;
+  background-color: #9fa4ac57;
+  padding: 12px;
+  box-shadow:
+    
+    0 0 0 6px rgba(236, 237, 238, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.save:hover {
+  background-color: #8a949f44; 
+  box-shadow:
+   
+    0 0 0 1px rgba(15, 23, 42, 0.1);
+  transform: translateY(1px); 
 }

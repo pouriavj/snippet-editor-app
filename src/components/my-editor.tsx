@@ -1,9 +1,10 @@
 "use client";
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import * as actions from "@/actions";
 import FileIcon from "./icons/file-icon";
 import CloseIcon from "./icons/close-icon";
+import SaveIcon from "./icons/save-icon";
 
 interface MyEditorProps {
   snippet: {
@@ -16,6 +17,13 @@ interface MyEditorProps {
   deleteFile: (id: number) => void;
   setFolder: (id: number) => void;
   fetchParentFolder: (id: number) => number;
+  editFileAction: {
+    formState: {
+      message: string | null;
+    };
+    submitAction: (formData: FormData) => void;
+    isPending: boolean;
+  };
 }
 
 export default function MyEditor({
@@ -25,19 +33,16 @@ export default function MyEditor({
   deleteFile,
   setFolder,
   fetchParentFolder,
+  editFileAction,
 }: MyEditorProps) {
   // closeHover state for setting vs-code style hover and close on not-selected files onclick
   const [closeHover, setCloseHover] = useState<number>(0);
+  const [code, setCode] = useState(snippet.code || "");
 
-  // const [code, setCode] = useState(snippet.code);
-  // // Becuse this Editor uses internal useState , we can say value = "" and it will just initiallize its state and later its state will change with onChange
-  // const handleEditorChange = (value: string = "") => {
-  //   setCode(value);
-  // };
-
-  // Calling server action inside client component with .bind method as docs recommend
-  // const editSnippetAction = actions.editSnippet.bind(null, snippet.id, code);
-  // .....
+  // To sync editor value when tabs switch
+  useEffect(() => {
+    setCode(snippet.code || "");
+  }, [snippet.id, snippet.code]);
 
   // Handle both delete from array and deselect selected file back to the previous index file (or next file for last file)
   // This operation done here instead of parent, becuse snippet ids that come from db might be out of order. this covers all edge cases by using map index
@@ -54,6 +59,20 @@ export default function MyEditor({
       setFolder(parent);
     }
     deleteFile(id);
+  };
+
+  const handleEditorChange = (value: string = "") => {
+    setCode(value);
+  };
+
+  const handleSave = () => {
+    const formData = new FormData();
+    formData.set("id", `${snippet.id}`);
+    formData.set("content", code || "");
+    startTransition(() => {
+      editFileAction.submitAction(formData);
+      // setIsSubmitted(true);
+    });
   };
 
   const renderToolBar = () => {
@@ -86,7 +105,7 @@ export default function MyEditor({
           style={{
             backgroundColor: file.id === snippet.id ? "#1e1e1e" : "unset",
             color: file.id === snippet.id ? "#e9edf2" : "#CECECE",
-            borderTopColor: file.id === snippet.id ? "#00BCD4" : "",
+            borderTopColor: file.id === snippet.id ? "#0098d4" : "",
             borderBottomColor: file.id === snippet.id ? "#1e1e1e" : "",
           }}
         >
@@ -118,25 +137,24 @@ export default function MyEditor({
       );
     });
   };
+
   return (
     <div className="editor">
       <div className="tool-bar">{renderToolBar()}</div>
+      <div className="save" onClick={handleSave}>
+        <SaveIcon />
+      </div>
       <Editor
         height="100vh"
         theme="vs-dark"
         language="javascript"
-        value={snippet.code || ""}
+        value={code}
         options={{
           padding: { top: 16, bottom: 16 },
+          minimap: { enabled: false },
         }}
-        // onChange={handleEditorChange}
+        onChange={handleEditorChange}
       />
-
-      {/* <form action={editSnippetAction}>
-        <button type="submit" className="p-2 border rounded cursor-pointer">
-          Save
-        </button>
-      </form> */}
     </div>
   );
 }

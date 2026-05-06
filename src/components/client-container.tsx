@@ -48,6 +48,7 @@ export default function ClientContainer({
   const [newFileArray, setNewFileArray] = useState(files); // Makes new file array to contains a mock child file input for better Ui vs-code style
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+  
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
   });
@@ -192,6 +193,7 @@ export default function ClientContainer({
         deleteFile={deleteFile}
         setFolder={setFolder}
         fetchParentFolder={fetchParentFolder}
+        editFileAction={formActions.edit.file}
       />
     </div>
   );

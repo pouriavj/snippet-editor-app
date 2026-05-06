@@ -190,27 +190,41 @@ export async function editFile(
   formData: FormData,
 ) {
   try {
-    const name = formData.get("name") as string;
+    const name = formData.get("name");
     const id = formData.get("id") as string; // get id for rename reuse
+    const content = formData.get("content");
+    if (typeof content === "string") {
+      const parsedId = id ? parseInt(id) : null;
+      // Update query
+      await db.query("UPDATE files SET content = $1 WHERE id = $2", [
+        content,
+        parsedId,
+      ]);
 
-    // Validation
-    if (typeof name !== "string" || name.length < 1) {
-      return { message: "error: name is required" };
+      revalidatePath("/"); // Revalidate after success
+
+      // return a state object for useActionState
+      return { message: "success" };
+    } else {
+      // Validation
+      if (typeof name !== "string" || name.length < 1) {
+        return { message: "error: name is required" };
+      }
+
+      // Parse IDs (null if empty/undefined)
+      const parsedId = id ? parseInt(id) : null;
+
+      // Update query
+      await db.query("UPDATE files SET name = $1 WHERE id = $2", [
+        name,
+        parsedId,
+      ]);
+
+      revalidatePath("/"); // Revalidate after success
+
+      // return a state object for useActionState
+      return { message: "success" };
     }
-
-    // Parse IDs (null if empty/undefined)
-    const parsedId = id ? parseInt(id) : null;
-
-    // Update query
-    await db.query("UPDATE files SET name = $1 WHERE id = $2", [
-      name,
-      parsedId,
-    ]);
-
-    revalidatePath("/"); // Revalidate after success
-
-    // return a state object for useActionState
-    return { message: "success" };
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "Something went wrong...";
@@ -226,7 +240,7 @@ export async function deleteFolder(
   formData: FormData,
 ) {
   try {
-    const folderId = formData.get("folder_id") as string;
+    const folderId = formData.get("folder_id");
 
     if (typeof folderId !== "string" || folderId.length < 1) {
       return { message: "error: folder_id is required" };
@@ -249,16 +263,13 @@ export async function deleteFolder(
   }
 }
 
-
-
-
 // Delete File
 export async function deleteFile(
   prevState: { message: string },
   formData: FormData,
 ) {
   try {
-    const fileId = formData.get("file_id") as string;
+    const fileId = formData.get("file_id");
 
     if (typeof fileId !== "string" || fileId.length < 1) {
       return { message: "error: file_id is required" };
