@@ -26,6 +26,12 @@ body {
 
   scrollbar-color: rgba(4, 194, 178, 0.7) rgba(41, 41, 41, 0.9);
 }
+@media (min-width: 900px) and (max-width: 1439px) {
+  .side-bar{
+    width: 36%;
+  }
+}
+
 
 .sidebar::-webkit-scrollbar {
   width: 10px;
@@ -491,4 +497,82 @@ input:focus {
    
     0 0 0 1px rgba(15, 23, 42, 0.1);
   transform: translateY(1px); 
+}
+.monaco-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1e1e1e; 
+}
+
+.monaco-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #0395a8; 
+  border-radius: 50%;
+  animation: monaco-spin 0.8s linear infinite;
+}
+
+@keyframes monaco-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.cm-editor {
+  background: #1e1e1e !important;
+}
+
+.cm-scroller {
+  background: #1e1e1e !important;
+}
+
+.cm-content,
+.cm-gutters {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+.cm-gutters {
+  border-right: 1px solid #2a2a2a !important;
+}
+
+.cm-cursor {
+  border-left-color: #ffffff !important;
+}
+
+.cm-selectionBackground,
+.cm-content ::selection {
+  background: rgba(0, 122, 204, 0.35) !important;
+}
+.cm-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(121, 121, 121, 0.6) rgba(30, 30, 30, 0);
+}
+
+.cm-scroller::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.cm-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb {
+  background: rgba(121, 121, 121, 0.6);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb:hover {
+  background: rgba(145, 145, 145, 0.75);
+  
+}
+
+.cm-scroller::-webkit-scrollbar-corner {
+  background: transparent;
 }

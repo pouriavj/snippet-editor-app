@@ -3,8 +3,7 @@
 import useFileSelect from "@/hooks/useFileSelect";
 import MyEditor from "./my-editor";
 import SideBar from "./side-bar";
-import { useActionState, useState } from "react";
-import * as actions from "@/actions";
+import { useState } from "react";
 import useFormAction from "@/hooks/useFormAction";
 
 interface CilentContainerProps {
@@ -48,7 +47,6 @@ export default function ClientContainer({
   const [newFileArray, setNewFileArray] = useState(files); // Makes new file array to contains a mock child file input for better Ui vs-code style
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
   });

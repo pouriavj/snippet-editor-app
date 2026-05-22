@@ -1,7 +1,9 @@
 "use client";
-import Editor from "@monaco-editor/react";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { oneDark } from "@codemirror/theme-one-dark";
 import { startTransition, useEffect, useState } from "react";
-import * as actions from "@/actions";
+
 import FileIcon from "./icons/file-icon";
 import CloseIcon from "./icons/close-icon";
 import SaveIcon from "./icons/save-icon";
@@ -144,16 +146,27 @@ export default function MyEditor({
       <div className="save" onClick={handleSave}>
         <SaveIcon />
       </div>
-      <Editor
-        height="100vh"
-        theme="vs-dark"
-        language="javascript"
+      <CodeMirror
         value={code}
-        options={{
-          padding: { top: 16, bottom: 16 },
-          minimap: { enabled: false },
-        }}
+        height="90vh"
+        extensions={[javascript({ jsx: true }), oneDark]}
         onChange={handleEditorChange}
+        autoFocus
+        basicSetup={{
+          lineNumbers: true,
+          foldGutter: false,
+          dropCursor: true,
+          allowMultipleSelections: false,
+          indentOnInput: true,
+        }}
+        theme="dark"
+        style={{
+          backgroundColor: "#1e1e1e",
+          color: "#d4d4d4",
+          fontSize: "14px",
+          paddingTop: "16px",
+          paddingBottom: "16px",
+        }}
       />
     </div>
   );
