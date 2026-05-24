@@ -163,6 +163,7 @@ body {
   cursor: pointer;
   padding: 10px 12px 10px 16px;
   border: 2px solid #292929;
+  border-width: 2px;
   border-left: none;
   box-sizing: border-box;
 }
@@ -632,4 +633,5 @@ input:focus {
     right: 16px;
     top: auto;
   }
+  
 }
