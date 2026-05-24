@@ -12,6 +12,8 @@ import FileIcon from "./icons/file-icon";
 import NewFileInput from "./new-file-input";
 import EllipsisHandler from "./ellipsis-handler";
 import { useState } from "react";
+import FolderTree from "./icons/folder-tree-icon";
+import CloseSidebar from "./icons/close-sidebar-icon";
 
 interface SideBarProps {
   folders: {
@@ -45,6 +47,8 @@ interface SideBarProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   addMockRenameInput: (itemType: ItemToAdd) => void;
   renameFile: (name: string) => void;
+  mobileSidebar: boolean;
+  setMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type ItemAction = {
@@ -80,6 +84,8 @@ export default function SideBar({
   setIsPopupOpen,
   addMockRenameInput,
   renameFile,
+  mobileSidebar,
+  setMobileSidebar,
 }: SideBarProps) {
   const [toggleState, setToggleState] = useState<{
     popupType: ItemToAdd;
@@ -108,6 +114,7 @@ export default function SideBar({
     }
     // becuse ellipsis stops propagation clicking on it the second time would make it false (this if else is for both making ellipsis toggle and also make click outside popup cancel)
   };
+
   const rootUserId =
     folders.find((f) => f.folder_id === null && f.user_id !== -1)?.user_id ||
     null;
@@ -286,15 +293,40 @@ export default function SideBar({
   });
 
   return (
-    <div className="side-bar">
-      <div className="header-container">
-        <div className="logo">
+    <div className="side-bar" style={{ width: mobileSidebar ? "72vh" : "" , overflowY: mobileSidebar ? "visible" : "hidden"}}>
+      <div
+        className="header-container"
+        style={{
+          flexDirection: mobileSidebar ? "row" : undefined,
+          gap: mobileSidebar ? "" : "36",
+          justifyContent: mobileSidebar ? "flex-start" : "",
+        }}
+      >
+        <div
+          className="logo"
+          style={{ flexDirection: mobileSidebar ? "row" : undefined }}
+        >
           <Logo />
           <UserIcon />
         </div>
         <SearchIcon />
+        <div
+          className="folder-tree-icon"
+          onClick={() => {
+            setMobileSidebar((prev) => !prev);
+          }}
+          style={{
+            position: mobileSidebar ? "absolute" : "relative",
+            right: mobileSidebar ? 16 : "",
+          }}
+        >
+          {mobileSidebar ? <CloseSidebar /> : <FolderTree />}
+        </div>
       </div>
-      <div className="create-buttons">
+      <div
+        className="create-buttons"
+        style={{ display: mobileSidebar ? "flex" : "" }}
+      >
         {isAddingItem === "none" && (
           <div className="button" onClick={() => handleAdd("file")}>
             <AddFileIcon />
@@ -307,13 +339,23 @@ export default function SideBar({
         )}
       </div>
       <div
-      style={{height: "94%"}}
+        style={{ height: "94%" }}
         onMouseDown={(e) => {
           handleParentClick(e);
         }}
       >
-        <div className="explorer">{renderFolders}</div>
-        <div className="files-explorer">{renderFiles}</div>
+        <div
+          className="explorer"
+          style={{ display: mobileSidebar ? "flex" : "" }}
+        >
+          {renderFolders}
+        </div>
+        <div
+          className="files-explorer"
+          style={{ display: mobileSidebar ? "flex" : "" }}
+        >
+          {renderFiles}
+        </div>
       </div>
     </div>
   );

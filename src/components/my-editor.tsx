@@ -26,6 +26,7 @@ interface MyEditorProps {
     submitAction: (formData: FormData) => void;
     isPending: boolean;
   };
+  mobileSidebar: boolean
 }
 
 export default function MyEditor({
@@ -36,6 +37,7 @@ export default function MyEditor({
   setFolder,
   fetchParentFolder,
   editFileAction,
+  mobileSidebar
 }: MyEditorProps) {
   // closeHover state for setting vs-code style hover and close on not-selected files onclick
   const [closeHover, setCloseHover] = useState<number>(0);
@@ -141,7 +143,7 @@ export default function MyEditor({
   };
 
   return (
-    <div className="editor">
+    <div className="editor" style={{width: mobileSidebar ? "32%" : ""}}>
       <div className="tool-bar">{renderToolBar()}</div>
       <div className="save" onClick={handleSave}>
         <SaveIcon />

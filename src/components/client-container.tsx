@@ -46,7 +46,7 @@ export default function ClientContainer({
   const [newFolderArray, setNewFolderArray] = useState(folders); // Makes new folder array to contains a mock child folder input for better Ui vs-code style
   const [newFileArray, setNewFileArray] = useState(files); // Makes new file array to contains a mock child file input for better Ui vs-code style
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-
+   const [mobileSidebar, setMobileSidebar] = useState(false);
   const selectedSnippet = files.find((file) => {
     return file.id === selectedFile;
   });
@@ -179,6 +179,8 @@ export default function ClientContainer({
         setIsPopupOpen={setIsPopupOpen}
         addMockRenameInput={addMockRenameInput}
         renameFile={renameFile}
+        mobileSidebar={mobileSidebar}
+        setMobileSidebar={setMobileSidebar}
       />
       <MyEditor
         snippet={{
@@ -192,6 +194,7 @@ export default function ClientContainer({
         setFolder={setFolder}
         fetchParentFolder={fetchParentFolder}
         editFileAction={formActions.edit.file}
+        mobileSidebar={mobileSidebar}
       />
     </div>
   );
