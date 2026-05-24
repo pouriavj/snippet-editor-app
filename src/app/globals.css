@@ -17,7 +17,7 @@ body {
 }
 
 .side-bar {
-  transition: width 0.3s ease-in-out; 
+  transition: width 0.3s ease-in-out;
   overflow: hidden;
   height: 100%;
   width: 24%;
@@ -71,7 +71,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.3s ease-in-out;
 }
 
 .folder-title {
@@ -103,7 +105,9 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 9px;
-  transition: opacity 0.3s ease-in-out, visibility 0.5s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.5s ease-in-out;
 }
 
 .child-folders {
@@ -137,7 +141,7 @@ body {
   width: 100%;
   position: relative;
   height: 100%;
-  transition: width 0.3s ease-in-out; 
+  transition: width 0.3s ease-in-out;
   overflow: hidden;
 }
 
@@ -187,7 +191,9 @@ body {
   position: absolute;
   right: 16;
   top: 96;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.3s ease-in-out;
 }
 
 .button {
@@ -583,6 +589,10 @@ input:focus {
 .tool-bar {
   overflow-x: auto;
 }
+.save-icon {
+  width: 28px;
+  height: 28px;
+}
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .side-bar {
@@ -616,7 +626,8 @@ input:focus {
     width: 84%;
   }
   .save {
-    right: 12px;
-    top: 36px;
+    bottom: 16px;
+    right: 16px;
+    top: auto;
   }
 }
