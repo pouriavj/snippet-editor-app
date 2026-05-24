@@ -633,5 +633,8 @@ input:focus {
     right: 16px;
     top: auto;
   }
+  .tool-bar-item{
+    border-width: 4px;
+  }
   
 }
