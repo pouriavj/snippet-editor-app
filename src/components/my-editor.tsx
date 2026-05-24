@@ -26,7 +26,7 @@ interface MyEditorProps {
     submitAction: (formData: FormData) => void;
     isPending: boolean;
   };
-  mobileSidebar: boolean
+  mobileSidebar: boolean;
 }
 
 export default function MyEditor({
@@ -37,7 +37,7 @@ export default function MyEditor({
   setFolder,
   fetchParentFolder,
   editFileAction,
-  mobileSidebar
+  mobileSidebar,
 }: MyEditorProps) {
   // closeHover state for setting vs-code style hover and close on not-selected files onclick
   const [closeHover, setCloseHover] = useState<number>(0);
@@ -134,7 +134,14 @@ export default function MyEditor({
                 handleDelete(file.id, prevFileId, prevFileName);
               }}
             >
-              {closeHover === file.id && <CloseIcon color="#9c9c9c" />}
+              {closeHover === file.id && (
+                <div className="pc-close-icon">
+                  <CloseIcon color="#9c9c9c" />
+                </div>
+              )}
+              <div className="mobile-close-icon">
+                <CloseIcon color="#9c9c9c" />
+              </div>
             </div>
           )}
         </div>
@@ -143,7 +150,7 @@ export default function MyEditor({
   };
 
   return (
-    <div className="editor" style={{width: mobileSidebar ? "32%" : ""}}>
+    <div className="editor" style={{ width: mobileSidebar ? "32%" : "" }}>
       <div className="tool-bar">{renderToolBar()}</div>
       <div className="save" onClick={handleSave}>
         <SaveIcon />

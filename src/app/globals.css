@@ -596,6 +596,9 @@ input:focus {
   width: 28px;
   height: 28px;
 }
+.mobile-close-icon {
+  display: none;
+}
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .side-bar {
@@ -635,5 +638,11 @@ input:focus {
   }
   .tool-bar-item {
     border-width: 3px;
+  }
+  .pc-close-icon {
+    display: none;
+  }
+  .mobile-close-icon {
+    display: block;
   }
 }
