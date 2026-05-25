@@ -8,7 +8,7 @@
 ![CodeMirror](https://img.shields.io/badge/CodeMirror-000000?style=for-the-badge&logo=codemirror&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 
-This project is a replica of the Visual Studio Code editor, featuring a nested folder structure, interactive create file/folder inputs, live database integration, and an intuitive vs-code style user interface. It utilizes Server Actions with useActionState hook, and React Hook Form (`rhf`) for efficient form handling and data management.
+This application(PWA) is a replica of the Visual Studio Code editor, featuring a nested folder structure, interactive create file/folder inputs, live database integration, and an intuitive vs-code style user interface. It utilizes Server Actions with useActionState hook, and React Hook Form (`rhf`) for efficient form handling and data management.
 
 ## ✨ Features
 
