@@ -143,6 +143,7 @@ body {
   height: 100%;
   transition: width 0.3s ease-in-out;
   overflow: hidden;
+  background-color: #1e1e1e;
 }
 
 .tool-bar {
