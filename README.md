@@ -32,6 +32,7 @@ Experience the Snippet Editor App live! You can access the deployed application 
 - **Editor:** CodeMirror
 - **Form Handling:** React Hook Form, useActionState
 - **Database:** PostgreSQL
+- **Deployment:** Vercel
 - **Runtime:** React 19
 
 ## 🔰 Getting Started
@@ -125,10 +126,6 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 2.  **Commit your changes:** `git commit -m 'Add some feature'`
 3.  **Push to the branch:** `git push origin feature/your-feature-name`
 4.  **Open a Pull Request.**
-
-Please ensure your code follows the project's coding standards and includes appropriate tests.
-
-For significant changes, please discuss them first by opening an issue to let us know what you plan to change.
 
 ## License
 
