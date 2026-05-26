@@ -148,12 +148,8 @@ body {
   transition: width 0.3s ease-in-out;
   overflow: hidden;
   background-color: #1e1e1e;
-  
 }
-.code-mirror{
-  max-height: 88vh;
-  overflow: hidden;
-}
+
 .tool-bar {
   display: flex;
   max-height: 48px;
@@ -654,5 +650,9 @@ input:focus {
   }
   .mobile-close-icon {
     display: block;
+  }
+  .code-mirror {
+    max-height: 84vh;
+    overflow: hidden;
   }
 }
