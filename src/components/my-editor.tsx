@@ -155,6 +155,7 @@ export default function MyEditor({
       <div className="save" onClick={handleSave}>
         <SaveIcon />
       </div>
+      <div>
       <CodeMirror
         value={code}
         height="90vh"
@@ -177,6 +178,7 @@ export default function MyEditor({
           paddingBottom: "16px",
         }}
       />
+      </div>
     </div>
   );
 }
