@@ -155,7 +155,7 @@ body {
 
 .tool-bar {
   display: flex;
-  max-height: 48px;
+  height: 48px;
   background-color: #161616;
   color: #e9edf2;
 }
