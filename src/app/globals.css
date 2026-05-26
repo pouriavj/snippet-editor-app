@@ -158,8 +158,6 @@ body {
   max-height: 48px;
   background-color: #161616;
   color: #e9edf2;
-  box-sizing: border-box;
-  flex: content;
 }
 .tool-bar-item {
   display: flex;
@@ -174,7 +172,6 @@ body {
   border: 2px solid #292929;
   border-width: 2px;
   border-left: none;
-  box-sizing: border-box;
 }
 
 .close {
