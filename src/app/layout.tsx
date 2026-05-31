@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: "Snippet Editor",
   description: "Online code snippet editor built with Next.js.",
   manifest: "/site.webmanifest",
+  verification: {
+    // For google search engine for SEO
+    google: "HREIZ3F7QKQ8eS5Kco0eJ772qHdySuFjC92s6ofiWUY",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico" },
